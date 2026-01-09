@@ -1,0 +1,38 @@
+imports:
+    - { resource: './FormElements/MultiImageUpload.yaml' }
+    - { resource: './FormElements/MultiFileUpload.yaml' }
+    - { resource: './Finishers/MultiFileEmail.yaml' }
+    - { resource: './Finishers/MultiFileSaveToDatabase.yaml' }
+
+TYPO3:
+    CMS:
+        Form:
+            prototypes:
+                standard:
+                    formEditor:
+                        translationFiles:
+                            20: 'EXT:multi_file_upload/Resources/Private/Language/locallang.xlf'
+                        dynamicJavaScriptModules:
+                            additionalViewModelModules:
+                                1670424038: '@brezo-it/multi-file-upload/backend/form-editor/view-model.js'
+                    formElementsDefinition:
+                        Form:
+                            variants:
+                                -
+                                    identifier: template-variant
+                                    renderingOptions:
+                                        templateRootPaths:
+                                            20: 'EXT:multi_file_upload/Resources/Private/Templates/Form/'
+                                        partialRootPaths:
+                                            20: 'EXT:multi_file_upload/Resources/Private/Partials/Form/'
+                                        layoutRootPaths:
+                                            20: 'EXT:multi_file_upload/Resources/Private/Layouts/Form/'
+                    finishersDefinition:
+                        EmailToSender:
+                            options:
+                                templateRootPaths:
+                                    20: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'
+                        EmailToReceiver:
+                            options:
+                                templateRootPaths:
+                                    20: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'

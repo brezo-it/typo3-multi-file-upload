@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" target-language="de" datatype="plaintext" original="EXT:multi_file_upload/Resources/Private/Language/locallang.xlf" date="2026-01-07T15:45:00Z" product-name="multi_file_upload">
+        <header/>
+        <body>
+            <trans-unit id="remove_image" resname="remove_image">
+                <source>Remove image</source>
+                <target>Bild entfernen</target>
+            </trans-unit>
+            <trans-unit id="remove_file" resname="remove_file">
+                <source>Remove file</source>
+                <target>Datei entfernen</target>
+            </trans-unit>
+            <trans-unit id="remove" resname="remove">
+                <source>Remove</source>
+                <target>Entfernen</target>
+            </trans-unit>
+            <trans-unit id="formEditor.elements.MultiImageUpload.label" resname="formEditor.elements.MultiImageUpload.label">
+                <source>Multi image upload</source>
+                <target>Mehrfach-Bildupload</target>
+            </trans-unit>
+            <trans-unit id="formEditor.elements.MultiImageUpload.description" resname="formEditor.elements.MultiImageUpload.description">
+                <source>An element for uploading multiple images</source>
+                <target>Ein Element zum Hochladen mehrerer Bilder</target>
+            </trans-unit>
+            <trans-unit id="formEditor.elements.MultiFileUpload.label" resname="formEditor.elements.MultiFileUpload.label">
+                <source>Multi file upload</source>
+                <target>Mehrfach-Dateiupload</target>
+            </trans-unit>
+            <trans-unit id="formEditor.elements.MultiFileUpload.description" resname="formEditor.elements.MultiFileUpload.description">
+                <source>An element for uploading multiple files</source>
+                <target>Ein Element zum Hochladen mehrerer Dateien</target>
+            </trans-unit>
+            <trans-unit id="finisher.MultiFileEmailToReceiver.label" resname="finisher.MultiFileEmailToReceiver.label">
+                <source>Multi-file email to receiver (you)</source>
+                <target>Multi-Datei E-Mail an Empfänger (Sie)</target>
+            </trans-unit>
+            <trans-unit id="finisher.MultiFileEmailToSender.label" resname="finisher.MultiFileEmailToSender.label">
+                <source>Multi-file email to sender (form submitter)</source>
+                <target>Multi-Datei E-Mail an Absender (Formularübermittler)</target>
+            </trans-unit>
+            <trans-unit id="finisher.MultiFileSaveToDatabase.label" resname="finisher.MultiFileSaveToDatabase.label">
+                <source>Save to database (with file references)</source>
+                <target>In Datenbank speichern (mit Dateireferenzen)</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

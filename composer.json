@@ -1,0 +1,41 @@
+{
+  "name": "brezo-it/multi-file-upload",
+  "description": "TYPO3 extension: Form Framework enhancement for multi-file upload with FAL support, email attachments and database storage.",
+  "type": "typo3-cms-extension",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "typo3",
+    "extension",
+    "form",
+    "upload",
+    "multi-file",
+    "file-upload",
+    "fal"
+  ],
+  "homepage": "https://github.com/brezo-it/multi-file-upload",
+  "support": {
+    "issues": "https://github.com/brezo-it/multi-file-upload/issues",
+    "source": "https://github.com/brezo-it/multi-file-upload"
+  },
+  "authors": [
+    {
+      "name": "Brezo IT",
+      "homepage": "https://brezo-it.de"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "typo3/cms-core": "^13.4",
+    "typo3/cms-form": "^13.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "BrezoIt\\MultiFileUpload\\": "Classes/"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "multi_file_upload"
+    }
+  }
+}

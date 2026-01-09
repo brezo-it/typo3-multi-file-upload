@@ -1,0 +1,38 @@
+prototypes:
+    standard:
+        formElementsDefinition:
+            MultiImageUpload:
+                __inheritances:
+                    10: 'TYPO3.CMS.Form.prototypes.standard.formElementsDefinition.ImageUpload'
+                implementationClassName: 'BrezoIt\MultiFileUpload\Form\Elements\MultiImageUpload'
+                properties:
+                    imageMaxWidth: 800
+                    imageMaxHeight: 800
+                    imageLinkMaxWidth: 1920
+                renderingOptions:
+                    templateName: 'MultiImageUpload'
+                    # Bootstrap classes for preview list
+                    previewListClass: 'row g-3'
+                    previewItemClass: 'col-md-4 col-lg-3 mb-3'
+                    previewImageWrapperClass: 'card'
+                    previewImageClass: 'card-img-top'
+                    previewLinkClass: 'lightbox'
+                    # Bootstrap classes for delete checkbox
+                    deleteWrapperClass: 'form-check card-footer'
+                    deleteCheckboxClass: 'form-check-input'
+                    deleteLabelClass: 'form-check-label'
+                    # Bootstrap classes for summary page
+                    summaryListClass: 'row g-2'
+                    summaryItemClass: 'col-6 col-md-4 col-lg-3 mb-2'
+                    summaryImageClass: 'img-thumbnail'
+                formEditor:
+                    __inheritances:
+                        10: 'TYPO3.CMS.Form.prototypes.standard.formElementsDefinition.ImageUpload.formEditor'
+                    label: 'formEditor.elements.MultiImageUpload.label'
+                    description: 'formEditor.elements.MultiImageUpload.description'
+                    group: 'custom'
+                    groupSorting: 410
+                    iconIdentifier: 'form-image-upload'
+        formEditor:
+            formEditorPartials:
+                FormElement-MultiImageUpload: 'Stage/FileUploadTemplate'
