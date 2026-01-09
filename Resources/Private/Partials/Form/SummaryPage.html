@@ -1,0 +1,93 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:formvh="http://typo3.org/ns/TYPO3/CMS/Form/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:asset.css identifier="multiUpload" href="EXT:multi_file_upload/Resources/Public/Css/multi-upload.css" />
+
+<formvh:renderRenderable renderable="{page}">
+    <fieldset>
+        <f:if condition="{page.label}">
+            <legend>{formvh:translateElementProperty(element: page, property: 'label')}</legend>
+        </f:if>
+        <div class="{page.renderingOptions.listClassAttribute}">
+            <formvh:renderAllFormValues renderable="{page.rootForm}" as="formValue">
+
+                <f:if condition="{formValue.isSection}">
+                    <f:then>
+                        <p><b>{formvh:translateElementProperty(element: formValue.element, property: 'label')}</b></p>
+                    </f:then>
+                    <f:else>
+                        <dl class="{page.renderingOptions.listRowClassAttribute}">
+                            <dt class="{page.renderingOptions.labelWrapperClassAttribute}">
+                                {formvh:translateElementProperty(element: formValue.element, property: 'label')}
+                            </dt>
+                            <dd class="{page.renderingOptions.valueWrapperClassAttribute}">
+                                <f:if condition="{formValue.value}">
+                                    <f:then>
+                                        <f:if condition="{0: formValue.element.type} == {0: 'ImageUpload'}">
+                                            <f:then>
+                                                <f:image
+                                                    image="{formValue.value}"
+                                                    class="img-thumbnail"
+                                                    style="max-width: 200px;"
+                                                    maxWidth="{formValue.element.properties.imageMaxWidth}"
+                                                    maxHeight="{formValue.element.properties.imageMaxHeight}"
+                                                    alt="{formvh:translateElementProperty(element: formValue.element, property: 'altText')}" />
+                                            </f:then>
+                                            <f:else if="{0: formValue.element.type} == {0: 'MultiImageUpload'}">
+                                                <div class="{formValue.element.renderingOptions.summaryListClass}">
+                                                    <f:for each="{formValue.value}" as="value">
+                                                        <div class="{formValue.element.renderingOptions.summaryItemClass}">
+                                                            <div class="multi-upload-summary-wrapper">
+                                                                <f:image
+                                                                    image="{value}"
+                                                                    class="{formValue.element.renderingOptions.summaryImageClass}"
+                                                                    maxWidth="{formValue.element.properties.imageMaxWidth}"
+                                                                    maxHeight="{formValue.element.properties.imageMaxHeight}"
+                                                                    alt="{formvh:translateElementProperty(element: formValue.element, property: 'altText')}" />
+                                                            </div>
+                                                        </div>
+                                                    </f:for>
+                                                </div>
+                                            </f:else>
+                                            <f:else if="{0: formValue.element.type} == {0: 'MultiFileUpload'}">
+                                                <ul class="list-group">
+                                                    <f:for each="{formValue.value}" as="value">
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <span>{value.originalResource.name}</span>
+                                                            <span class="badge bg-secondary">
+                                                                <f:format.bytes value="{value.originalResource.size}" />
+                                                            </span>
+                                                        </li>
+                                                    </f:for>
+                                                </ul>
+                                            </f:else>
+                                            <f:else>
+                                                <f:if condition="{formValue.isMultiValue}">
+                                                    <f:then>
+                                                        <ul class="list-unstyled mb-0">
+                                                            <f:for each="{formValue.processedValue}" as="value">
+                                                                <li class="mb-1">{value}</li>
+                                                            </f:for>
+                                                        </ul>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <f:format.nl2br>{formValue.processedValue}</f:format.nl2br>
+                                                    </f:else>
+                                                </f:if>
+                                            </f:else>
+                                        </f:if>
+                                    </f:then>
+                                    <f:else>
+                                        <span class="text-muted">-</span>
+                                    </f:else>
+                                </f:if>
+                            </dd>
+                        </dl>
+                    </f:else>
+                </f:if>
+            </formvh:renderAllFormValues>
+        </div>
+    </fieldset>
+</formvh:renderRenderable>
+</html>

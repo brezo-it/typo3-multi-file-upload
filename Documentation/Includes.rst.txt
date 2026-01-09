@@ -1,0 +1,8 @@
+.. This is included by all .rst files in this documentation
+
+.. |extension_key| replace:: multi_file_upload
+.. |extension_name| replace:: Multi File Upload
+.. |vendor_name| replace:: BrezoIt
+.. |package_name| replace:: brezo-it/multi-file-upload
+
+.. _start: https://docs.typo3.org/p/brezo-it/multi-file-upload/main/en-us/

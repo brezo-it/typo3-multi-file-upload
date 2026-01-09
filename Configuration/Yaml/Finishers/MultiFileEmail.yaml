@@ -1,0 +1,55 @@
+TYPO3:
+  CMS:
+    Form:
+      prototypes:
+        standard:
+          formEditor:
+            translationFiles:
+              20: 'EXT:multi_file_upload/Resources/Private/Language/locallang.xlf'
+          finishersDefinition:
+            MultiFileEmailToReceiver:
+              __inheritances:
+                10: 'TYPO3.CMS.Form.prototypes.standard.finishersDefinition.EmailToReceiver'
+              implementationClassName: BrezoIt\MultiFileUpload\Form\Finishers\MultiFileEmailFinisher
+              options:
+                templateRootPaths:
+                  20: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'
+              formEditor:
+                label: 'finisher.MultiFileEmailToReceiver.label'
+            MultiFileEmailToSender:
+              __inheritances:
+                10: 'TYPO3.CMS.Form.prototypes.standard.finishersDefinition.EmailToSender'
+              implementationClassName: BrezoIt\MultiFileUpload\Form\Finishers\MultiFileEmailFinisher
+              options:
+                templateRootPaths:
+                  20: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'
+              formEditor:
+                label: 'finisher.MultiFileEmailToSender.label'
+          formElementsDefinition:
+            Form:
+              formEditor:
+                editors:
+                  900:
+                    selectOptions:
+                      70:
+                        value: MultiFileEmailToReceiver
+                        label: 'finisher.MultiFileEmailToReceiver.label'
+                      80:
+                        value: MultiFileEmailToSender
+                        label: 'finisher.MultiFileEmailToSender.label'
+                propertyCollections:
+                  finishers:
+                    70:
+                      __inheritances:
+                        10: 'TYPO3.CMS.Form.prototypes.standard.formElementsDefinition.Form.formEditor.propertyCollections.finishers.20'
+                      identifier: MultiFileEmailToReceiver
+                      editors:
+                        100:
+                          label: 'finisher.MultiFileEmailToReceiver.label'
+                    80:
+                      __inheritances:
+                        10: 'TYPO3.CMS.Form.prototypes.standard.formElementsDefinition.Form.formEditor.propertyCollections.finishers.10'
+                      identifier: MultiFileEmailToSender
+                      editors:
+                        100:
+                          label: 'finisher.MultiFileEmailToSender.label'

@@ -1,0 +1,30 @@
+prototypes:
+    standard:
+        formElementsDefinition:
+            MultiFileUpload:
+                __inheritances:
+                    10: 'TYPO3.CMS.Form.prototypes.standard.formElementsDefinition.FileUpload'
+                implementationClassName: 'BrezoIt\MultiFileUpload\Form\Elements\MultiFileUpload'
+                renderingOptions:
+                    templateName: 'MultiFileUpload'
+                    # Bootstrap classes for file list
+                    fileListClass: 'list-group mb-3'
+                    fileItemClass: 'list-group-item d-flex justify-content-between align-items-center'
+                    fileIconClass: 'bi bi-file-earmark me-2'
+                    fileNameClass: 'flex-grow-1'
+                    fileSizeClass: 'badge bg-secondary me-2'
+                    # Bootstrap classes for delete checkbox
+                    deleteWrapperClass: 'form-check'
+                    deleteCheckboxClass: 'form-check-input'
+                    deleteLabelClass: 'form-check-label'
+                formEditor:
+                    __inheritances:
+                        10: 'TYPO3.CMS.Form.prototypes.standard.formElementsDefinition.FileUpload.formEditor'
+                    label: 'formEditor.elements.MultiFileUpload.label'
+                    description: 'formEditor.elements.MultiFileUpload.description'
+                    group: 'custom'
+                    groupSorting: 110
+                    iconIdentifier: 'form-file-upload'
+        formEditor:
+            formEditorPartials:
+                FormElement-MultiFileUpload: 'Stage/FileUploadTemplate'
