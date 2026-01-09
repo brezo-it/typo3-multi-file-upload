@@ -1,0 +1,19 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+    # Fluid ViewHelpers (like core: tagged and autowired)
+  BrezoIt\MultiFileUpload\ViewHelpers\:
+      resource: '../Classes/ViewHelpers/*'
+      public: true
+      tags: ['fluid.viewhelper']
+
+    # Extbase TypeConverter for MultiFile
+  BrezoIt\MultiFileUpload\Mvc\Property\TypeConverter\MultiUploadedFileReferenceConverter:
+      tags:
+          - name: extbase.type_converter
+            priority: 10
+            target: BrezoIt\MultiFileUpload\Domain\Model\MultiFile
+            sources: array

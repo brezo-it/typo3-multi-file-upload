@@ -1,0 +1,65 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:formvh="http://typo3.org/ns/TYPO3/CMS/Form/ViewHelpers"
+      xmlns:sp="http://typo3.org/ns/BrezoIt/MultiFileUpload/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:asset.css identifier="multiUpload" href="EXT:multi_file_upload/Resources/Public/Css/multi-upload.css" />
+
+<formvh:renderRenderable renderable="{element}">
+    <f:form.validationResults for="{element.rootForm.identifier}.{element.identifier}">
+        <f:if condition="{element.properties.elementDescription}">
+            <f:variable name="aria" value="{describedby: '{element.uniqueIdentifier}-desc'}" />
+        </f:if>
+        <f:if condition="{validationResults.errors}">
+            <f:variable name="aria" value="{invalid: 'true', describedby: '{element.uniqueIdentifier}-errors'}" />
+        </f:if>
+
+        <f:render partial="Field/Field" arguments="{element: element}" contentAs="elementContent">
+            <sp:form.multiUploadedResource
+                property="{element.identifier}"
+                multiple="multiple"
+                as="files"
+                id="{element.uniqueIdentifier}"
+                class="{element.properties.elementClassAttribute}"
+                errorClass="{element.rootForm.renderingOptions.fieldProperties.errorClassAttribute}"
+                additionalAttributes="{formvh:translateElementProperty(element: element, property: 'fluidAdditionalAttributes')}"
+                accept="{element.properties.allowedMimeTypes}"
+                aria="{aria}"
+            >
+                <f:if condition="{files}">
+                    <div id="{element.uniqueIdentifier}-preview">
+                        <ul class="{element.renderingOptions.fileListClass}">
+                            <f:for each="{files}" as="file">
+                                <li class="{element.renderingOptions.fileItemClass} multi-upload-item">
+                                    <span class="multi-upload-file-info">
+                                        <span class="{element.renderingOptions.fileIconClass}"></span>
+                                        <span class="{element.renderingOptions.fileNameClass}">
+                                            {file.originalResource.name}
+                                        </span>
+                                        <span class="{element.renderingOptions.fileSizeClass}">
+                                            <f:format.bytes value="{file.originalResource.size}" />
+                                        </span>
+                                    </span>
+
+                                    <div class="{element.renderingOptions.deleteWrapperClass}">
+                                        <sp:form.multiUploadDeleteCheckbox
+                                            property="{element.identifier}"
+                                            fileReference="{file}"
+                                            class="{element.renderingOptions.deleteCheckboxClass}"
+                                            id="{element.uniqueIdentifier}-{file.originalResource.originalFile.uid}-del"
+                                        />
+                                        <label for="{element.uniqueIdentifier}-{file.originalResource.originalFile.uid}-del"
+                                               class="{element.renderingOptions.deleteLabelClass}">
+                                            <f:translate key="LLL:EXT:multi_file_upload/Resources/Private/Language/locallang.xlf:remove_file" />
+                                        </label>
+                                    </div>
+                                </li>
+                            </f:for>
+                        </ul>
+                    </div>
+                </f:if>
+            </sp:form.multiUploadedResource>
+        </f:render>
+    </f:form.validationResults>
+</formvh:renderRenderable>
+</html>
