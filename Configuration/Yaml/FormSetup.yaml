@@ -2,7 +2,7 @@ imports:
     - { resource: './FormElements/MultiImageUpload.yaml' }
     - { resource: './FormElements/MultiFileUpload.yaml' }
     - { resource: './Finishers/MultiFileEmail.yaml' }
-    - { resource: './Finishers/MultiFileSaveToDatabase.yaml' }
+    - { resource: './Finishers/AttachFilesToRecord.yaml' }
 
 TYPO3:
     CMS:
