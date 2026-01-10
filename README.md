@@ -83,8 +83,15 @@ finishers:
 ### Database Finisher (with FAL support)
 
 The standard TYPO3 `SaveToDatabase` finisher only stores file UIDs, not proper FAL references.
-This extension provides `MultiFileSaveToDatabase` which creates `sys_file_reference` records,
+This extension provides `AttachFilesToRecord` which creates `sys_file_reference` records,
 making uploaded images visible in the TYPO3 backend.
+
+**How it works:**
+
+1. Use the core `SaveToDatabase` finisher to create the record (without file fields)
+2. Use `AttachFilesToRecord` to attach files via `sys_file_reference` records
+3. The finisher reads the record UID from `{SaveToDatabase.insertedUids.0}`
+4. Images are immediately visible and editable in the TYPO3 backend
 
 **Example: Classified Ads / Marketplace Form**
 
@@ -117,7 +124,8 @@ renderables:
             - 'image/png'
 
 finishers:
-  - identifier: MultiFileSaveToDatabase
+  # 1. Core finisher creates the record
+  - identifier: SaveToDatabase
     options:
       table: 'tx_myext_domain_model_classifiedad'
       databaseColumnMappings:
@@ -130,8 +138,18 @@ finishers:
           mapOnDatabaseColumn: title
         description:
           mapOnDatabaseColumn: description
+        # Note: Do NOT include file fields here!
+
+  # 2. AttachFilesToRecord creates sys_file_reference entries
+  - identifier: AttachFilesToRecord
+    options:
+      table: 'tx_myext_domain_model_classifiedad'
+      recordUid: '{SaveToDatabase.insertedUids.0}'
+      storagePid: 1
+      elements:
         images:
           mapOnDatabaseColumn: images
+
   - identifier: MultiFileEmailToReceiver
     options:
       subject: 'New classified ad submitted'
@@ -143,12 +161,14 @@ finishers:
       message: 'Thank you! Your ad will be reviewed and published soon.'
 ```
 
-**How it works:**
+**AttachFilesToRecord Options:**
 
-1. Form data is saved to your custom table
-2. For `MultiImageUpload` fields, proper `sys_file_reference` records are created
-3. The `images` column stores the file count (as expected by TCA `type: file`)
-4. Images are immediately visible and editable in the TYPO3 backend
+| Option | Type | Description |
+|--------|------|-------------|
+| `table` | string | Target database table |
+| `recordUid` | string | UID of the record (use `{SaveToDatabase.insertedUids.0}`) |
+| `storagePid` | int | Page ID for sys_file_reference records |
+| `elements` | array | Mapping of form elements to database columns |
 
 **TCA configuration for the images field:**
 
@@ -193,8 +213,8 @@ Classes/
   Form/
     Elements/MultiImageUpload.php              # Form element definition
     Finishers/
+      AttachFilesToRecordFinisher.php          # Attach files to database record
       MultiFileEmailFinisher.php               # Email finisher with attachments
-      SaveToDatabaseFinisher.php               # Database finisher with FAL support
   Mvc/Property/
     MultiFilePropertyMappingConfiguration.php  # Property mapping config (hooks)
     TypeConverter/
@@ -252,6 +272,10 @@ plugin.tx_form.settings.yamlConfigurations {
     100 = EXT:your_extension/Configuration/Yaml/CustomFormSetup.yaml
 }
 ```
+
+## Author
+
+Maik Preuss
 
 ## License
 

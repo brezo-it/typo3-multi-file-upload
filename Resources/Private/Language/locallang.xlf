@@ -30,8 +30,8 @@
             <trans-unit id="finisher.MultiFileEmailToSender.label" resname="finisher.MultiFileEmailToSender.label">
                 <source>Multi-file email to sender (form submitter)</source>
             </trans-unit>
-            <trans-unit id="finisher.MultiFileSaveToDatabase.label" resname="finisher.MultiFileSaveToDatabase.label">
-                <source>Save to database (with file references)</source>
+            <trans-unit id="finisher.AttachFilesToRecord.label" resname="finisher.AttachFilesToRecord.label">
+                <source>Attach files to record</source>
             </trans-unit>
         </body>
     </file>

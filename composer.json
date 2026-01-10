@@ -12,15 +12,16 @@
     "file-upload",
     "fal"
   ],
-  "homepage": "https://github.com/brezo-it/multi-file-upload",
+  "homepage": "https://github.com/brezo-it/typo3-multi-file-upload",
   "support": {
-    "issues": "https://github.com/brezo-it/multi-file-upload/issues",
-    "source": "https://github.com/brezo-it/multi-file-upload"
+    "issues": "https://github.com/brezo-it/typo3-multi-file-upload/issues",
+    "source": "https://github.com/brezo-it/typo3-multi-file-upload"
   },
   "authors": [
     {
-      "name": "Brezo IT",
-      "homepage": "https://brezo-it.de"
+      "name": "Maik Preuss",
+      "email": "maik.preuss@gmx.de",
+      "role": "Developer"
     }
   ],
   "require": {
