@@ -5,7 +5,7 @@ TYPO3:
         standard:
           formEditor:
             translationFiles:
-              20: 'EXT:multi_file_upload/Resources/Private/Language/locallang.xlf'
+              1670424038: 'EXT:multi_file_upload/Resources/Private/Language/locallang.xlf'
           finishersDefinition:
             AttachFilesToRecord:
               implementationClassName: BrezoIt\MultiFileUpload\Form\Finishers\AttachFilesToRecordFinisher

@@ -5,7 +5,7 @@ TYPO3:
         standard:
           formEditor:
             translationFiles:
-              20: 'EXT:multi_file_upload/Resources/Private/Language/locallang.xlf'
+              1670424038: 'EXT:multi_file_upload/Resources/Private/Language/locallang.xlf'
           finishersDefinition:
             MultiFileEmailToReceiver:
               __inheritances:
@@ -13,7 +13,7 @@ TYPO3:
               implementationClassName: BrezoIt\MultiFileUpload\Form\Finishers\MultiFileEmailFinisher
               options:
                 templateRootPaths:
-                  20: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'
+                  1670424038: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'
               formEditor:
                 label: 'finisher.MultiFileEmailToReceiver.label'
             MultiFileEmailToSender:
@@ -22,7 +22,7 @@ TYPO3:
               implementationClassName: BrezoIt\MultiFileUpload\Form\Finishers\MultiFileEmailFinisher
               options:
                 templateRootPaths:
-                  20: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'
+                  1670424038: 'EXT:multi_file_upload/Resources/Private/Templates/Finishers/Email/'
               formEditor:
                 label: 'finisher.MultiFileEmailToSender.label'
           formElementsDefinition:
