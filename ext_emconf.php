@@ -9,11 +9,11 @@ $EM_CONF[$_EXTKEY] = [
     'author_company' => 'Brezo IT',
     'state' => 'stable',
     'clearCacheOnLoad' => 1,
-    'version' => '1.1.0',
+    'version' => '1.1.1',
     'constraints' => [
         'depends' => [
-            'typo3' => '13.4.0-13.4.99',
-            'form' => '13.4.0-13.4.99',
+            'typo3' => '13.4.0-13.99.99',
+            'form' => '13.4.0-13.99.99',
         ],
         'conflicts' => [],
         'suggests' => [],
