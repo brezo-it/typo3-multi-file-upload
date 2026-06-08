@@ -7,12 +7,12 @@ use TYPO3\CMS\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper;
 use TYPO3\CMS\Form\Mvc\Property\TypeConverter\PseudoFileReference;
 
 /**
- * Renders a delete checkbox for a file in a multi-upload field
+ * Renders a delete checkbox for an uploaded file (single or multi upload).
  *
  * Usage:
- * <sp:form.multiUploadDeleteCheckbox property="imageupload-1" fileReference="{image}" />
+ * <sp:form.uploadDeleteCheckbox property="imageupload-1" fileReference="{image}" />
  */
-final class MultiUploadDeleteCheckboxViewHelper extends AbstractFormFieldViewHelper
+final class UploadDeleteCheckboxViewHelper extends AbstractFormFieldViewHelper
 {
     protected $tagName = 'input';
 

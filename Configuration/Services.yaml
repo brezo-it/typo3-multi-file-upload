@@ -17,3 +17,6 @@ services:
             priority: 10
             target: BrezoIt\MultiFileUpload\Domain\Model\MultiFile
             sources: array
+
+    # Extbase TypeConverter for single file uploads with delete support
+  BrezoIt\MultiFileUpload\Mvc\Property\TypeConverter\SingleUploadedFileReferenceConverter: ~

@@ -6,9 +6,11 @@ namespace BrezoIt\MultiFileUpload\Mvc\Property;
 
 use BrezoIt\MultiFileUpload\Form\Elements\MultiFileUpload;
 use BrezoIt\MultiFileUpload\Mvc\Property\TypeConverter\MultiUploadedFileReferenceConverter;
+use BrezoIt\MultiFileUpload\Mvc\Property\TypeConverter\SingleUploadedFileReferenceConverter;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Form\Domain\Model\FormElements\FileUpload;
 use TYPO3\CMS\Form\Domain\Model\Renderable\RenderableInterface;
 use TYPO3\CMS\Form\Domain\Runtime\FormRuntime;
 use TYPO3\CMS\Form\Domain\Runtime\FormRuntime\Lifecycle\AfterFormStateInitializedInterface;
@@ -25,17 +27,26 @@ final class MultiFilePropertyMappingConfiguration implements AfterFormStateIniti
 {
     /**
      * Called after the form definition is built.
-     * Configures the TypeConverter options for MultiFileUpload elements.
+     * Configures the TypeConverter options for MultiFileUpload and core FileUpload elements.
      */
     public function afterBuildingFinished(RenderableInterface $renderable): void
     {
-        if (!$renderable instanceof MultiFileUpload) {
+        if ($renderable instanceof MultiFileUpload) {
+            $this->configureMultiUpload($renderable);
             return;
         }
 
-        $formDefinition = $renderable->getRootForm();
-        $processingRule = $formDefinition->getProcessingRule($renderable->getIdentifier());
-        $propertyMappingConfiguration = $processingRule->getPropertyMappingConfiguration();
+        // Core FileUpload (incl. ImageUpload): swap in our delete-aware converter
+        if ($renderable instanceof FileUpload) {
+            $this->configureSingleUpload($renderable);
+        }
+    }
+
+    private function configureMultiUpload(MultiFileUpload $renderable): void
+    {
+        $propertyMappingConfiguration = $renderable->getRootForm()
+            ->getProcessingRule($renderable->getIdentifier())
+            ->getPropertyMappingConfiguration();
         $properties = $renderable->getProperties();
 
         $saveToFileMount = (string)($properties['saveToFileMount'] ?? '');
@@ -50,6 +61,25 @@ final class MultiFilePropertyMappingConfiguration implements AfterFormStateIniti
         $propertyMappingConfiguration->setTypeConverterOption(
             MultiUploadedFileReferenceConverter::class,
             MultiUploadedFileReferenceConverter::OPTION_PROPERTY,
+            $renderable->getIdentifier()
+        );
+    }
+
+    private function configureSingleUpload(FileUpload $renderable): void
+    {
+        $propertyMappingConfiguration = $renderable->getRootForm()
+            ->getProcessingRule($renderable->getIdentifier())
+            ->getPropertyMappingConfiguration();
+
+        // Replace the core converter with our delete-aware subclass.
+        // Other options (uploadFolder, uploadSeed, validators) are read by the
+        // parent class under the core class key and need no remapping.
+        $propertyMappingConfiguration->setTypeConverter(
+            GeneralUtility::makeInstance(SingleUploadedFileReferenceConverter::class)
+        );
+        $propertyMappingConfiguration->setTypeConverterOption(
+            SingleUploadedFileReferenceConverter::class,
+            SingleUploadedFileReferenceConverter::OPTION_PROPERTY,
             $renderable->getIdentifier()
         );
     }

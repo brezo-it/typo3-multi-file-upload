@@ -221,7 +221,7 @@ Classes/
       MultiUploadedFileReferenceConverter.php  # File upload converter
   ViewHelpers/Form/
     MultiUploadedResourceViewHelper.php        # File input rendering
-    MultiUploadDeleteCheckboxViewHelper.php    # Delete checkbox
+    UploadDeleteCheckboxViewHelper.php         # Delete checkbox (single + multi)
 
 Configuration/
   Icons.php                 # Icon registration

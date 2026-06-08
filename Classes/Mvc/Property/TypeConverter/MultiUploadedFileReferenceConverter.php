@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BrezoIt\MultiFileUpload\Mvc\Property\TypeConverter;
 
 use BrezoIt\MultiFileUpload\Domain\Model\MultiFile;
-use Psr\Http\Message\ServerRequestInterface;
+use BrezoIt\MultiFileUpload\Mvc\Property\UploadDeleteRequest;
 use TYPO3\CMS\Core\Http\UploadedFile;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
@@ -104,7 +104,7 @@ final class MultiUploadedFileReferenceConverter extends AbstractTypeConverter
     private function applyDeletions(MultiFile $storage, ?PropertyMappingConfigurationInterface $configuration): void
     {
         $propertyName = (string)($configuration?->getConfigurationValue(self::class, self::OPTION_PROPERTY) ?? '');
-        $deleteUids = $this->getDeleteFileUids($propertyName);
+        $deleteUids = UploadDeleteRequest::getMarkedFileUids($propertyName);
 
         if ($deleteUids === []) {
             return;
@@ -122,73 +122,5 @@ final class MultiUploadedFileReferenceConverter extends AbstractTypeConverter
         foreach ($toRemove as $ref) {
             $storage->detach($ref);
         }
-    }
-
-    /**
-     * Get file UIDs marked for deletion from POST data
-     *
-     * @return array<int,true>
-     */
-    private function getDeleteFileUids(string $propertyName): array
-    {
-        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
-        if (!$request instanceof ServerRequestInterface) {
-            return [];
-        }
-
-        $body = (array)$request->getParsedBody();
-
-        // Auto-detect property name if not provided
-        if ($propertyName === '') {
-            $propertyName = $this->detectPropertyName($body);
-        }
-
-        if ($propertyName === '') {
-            return [];
-        }
-
-        return $this->parseDeleteFlags($body[$propertyName . '__delete'] ?? []);
-    }
-
-    /**
-     * Auto-detect property name from POST data
-     */
-    private function detectPropertyName(array $body): string
-    {
-        $candidates = array_filter(
-            array_keys($body),
-            fn($key) => is_string($key) && str_ends_with($key, '__delete')
-        );
-
-        if (count($candidates) === 1) {
-            $firstCandidate = reset($candidates);
-            return substr($firstCandidate, 0, -strlen('__delete'));
-        }
-
-        return '';
-    }
-
-    /**
-     * Parse delete flags into UID map
-     *
-     * @return array<int,true>
-     */
-    private function parseDeleteFlags(mixed $deleteMap): array
-    {
-        if (!is_array($deleteMap)) {
-            return [];
-        }
-
-        $uids = [];
-        foreach ($deleteMap as $fileUid => $flag) {
-            if ((int)$flag === 1) {
-                $uid = (int)$fileUid;
-                if ($uid > 0) {
-                    $uids[$uid] = true;
-                }
-            }
-        }
-
-        return $uids;
     }
 }
