@@ -6,19 +6,19 @@ namespace BrezoIt\MultiFileUpload\Form\Finishers;
 
 use BrezoIt\MultiFileUpload\Domain\Model\MultiFile;
 use BrezoIt\MultiFileUpload\Form\Elements\MultiFileUpload;
-use BrezoIt\MultiFileUpload\Form\Elements\MultiImageUpload;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Form\Domain\Finishers\AbstractFinisher;
+use TYPO3\CMS\Form\Domain\Model\FormElements\FileUpload;
 use TYPO3\CMS\Form\Domain\Model\FormElements\FormElementInterface;
 
 /**
  * Finisher to attach uploaded files to a database record.
  *
- * This finisher creates sys_file_reference records for MultiImageUpload
- * and MultiFileUpload form elements, linking them to a record created
- * by the core SaveToDatabase finisher.
+ * This finisher creates sys_file_reference records for file/image upload
+ * form elements, linking them to a record created by the core
+ * SaveToDatabase finisher.
  *
  * Configuration example:
  *
@@ -72,8 +72,7 @@ class AttachFilesToRecordFinisher extends AbstractFinisher
         foreach ($elementsConfiguration as $elementIdentifier => $config) {
             $element = $this->getElementByIdentifier($elementIdentifier);
 
-            // Only process MultiImageUpload and MultiFileUpload elements
-            if (!$element instanceof MultiImageUpload && !$element instanceof MultiFileUpload) {
+            if (!$element instanceof MultiFileUpload && !$element instanceof FileUpload) {
                 continue;
             }
 

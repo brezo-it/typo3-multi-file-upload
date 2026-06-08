@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BrezoIt\MultiFileUpload\Form\Finishers;
 
 use BrezoIt\MultiFileUpload\Form\Elements\MultiFileUpload;
-use BrezoIt\MultiFileUpload\Form\Elements\MultiImageUpload;
 use Symfony\Component\Mime\Address;
 use TYPO3\CMS\Core\Mail\FluidEmail;
 use TYPO3\CMS\Core\Mail\MailerInterface;
@@ -18,13 +17,13 @@ use TYPO3\CMS\Form\Domain\Runtime\FormRuntime;
 use TYPO3\CMS\Form\Service\TranslationService;
 
 /**
- * Email finisher with support for MultiImageUpload attachments.
+ * Email finisher with support for multi file upload attachments.
  *
  * This finisher extends the core EmailFinisher to handle multiple file uploads
- * from MultiImageUpload form elements as email attachments.
+ * from MultiFileUpload form elements as email attachments.
  *
  * Use this finisher instead of EmailToReceiver/EmailToSender when your form
- * contains MultiImageUpload elements and you want to attach the uploaded files.
+ * contains MultiFileUpload elements and you want to attach the uploaded files.
  */
 class MultiFileEmailFinisher extends EmailFinisher
 {
@@ -106,7 +105,7 @@ class MultiFileEmailFinisher extends EmailFinisher
     protected function attachUploads(FluidEmail $mail, FormRuntime $formRuntime): void
     {
         foreach ($formRuntime->getFormDefinition()->getRenderablesRecursively() as $element) {
-            if ($element instanceof MultiImageUpload || $element instanceof MultiFileUpload) {
+            if ($element instanceof MultiFileUpload) {
                 $files = $formRuntime[$element->getIdentifier()];
                 if (is_iterable($files)) {
                     foreach ($files as $file) {
