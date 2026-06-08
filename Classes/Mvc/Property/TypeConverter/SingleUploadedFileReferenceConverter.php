@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace BrezoIt\MultiFileUpload\Mvc\Property\TypeConverter;
 
 use BrezoIt\MultiFileUpload\Mvc\Property\UploadDeleteRequest;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
+use TYPO3\CMS\Core\Http\UploadedFile;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Form\Mvc\Property\TypeConverter\UploadedFileReferenceConverter;
 
@@ -26,9 +29,21 @@ final class SingleUploadedFileReferenceConverter extends UploadedFileReferenceCo
         array $convertedChildProperties = [],
         ?PropertyMappingConfigurationInterface $configuration = null
     ) {
-        $source = $this->normalizeMergedUpload($source);
+        $propertyName = (string)($configuration?->getConfigurationValue(self::class, self::OPTION_PROPERTY) ?? '');
 
-        if ($this->isMarkedForDeletion($source, $configuration)) {
+        // When a form field is resubmitted with both a previous upload
+        // (submittedFile.resourcePointer in the parsed body) and a new
+        // file upload (UploadedFile in $_FILES), Extbase's RequestBuilder
+        // runs array_merge_recursive on them — producing a structure where
+        // the core converter no longer recognizes the new upload. In that
+        // case, fetch the real UploadedFile from the request and pass it
+        // directly: parent::convertFrom handles UploadedFile natively.
+        $newUpload = $this->findUploadedFile($propertyName);
+        if ($newUpload !== null) {
+            return parent::convertFrom($newUpload, $targetType, $convertedChildProperties, $configuration);
+        }
+
+        if ($this->isMarkedForDeletion($source, $propertyName)) {
             return null;
         }
 
@@ -36,49 +51,55 @@ final class SingleUploadedFileReferenceConverter extends UploadedFileReferenceCo
     }
 
     /**
-     * When a form field is resubmitted with both a previous upload (submittedFile.resourcePointer
-     * in the parsed body) and a new file upload (UploadedFile in $_FILES), Extbase's
-     * RequestBuilder runs array_merge_recursive on them. This produces a broken array where
-     * the UploadedFile's protected properties become mangled keys like "\0*\0error" and the
-     * "error" key the converter expects is missing — causing the core converter to silently
-     * fall through to the restore-from-submittedFile branch.
-     *
-     * Detect that shape and rebuild a clean upload-info array so the new upload wins.
+     * Locate an UploadedFile in the request matching the given property name.
+     * Returns null when no successful upload exists for the property.
      */
-    private function normalizeMergedUpload(mixed $source): mixed
+    private function findUploadedFile(string $propertyName): ?UploadedFile
     {
-        if (!is_array($source) || !array_key_exists("\0*\0error", $source)) {
-            return $source;
+        if ($propertyName === '') {
+            return null;
         }
 
-        return [
-            'name' => $source["\0*\0clientFilename"] ?? '',
-            'type' => $source["\0*\0clientMediaType"] ?? '',
-            'tmp_name' => $source["\0*\0file"] ?? '',
-            'error' => (int)$source["\0*\0error"],
-            'size' => (int)($source["\0*\0size"] ?? 0),
-        ];
+        $request = $GLOBALS['TYPO3_REQUEST'] ?? null;
+        if (!$request instanceof ServerRequestInterface) {
+            return null;
+        }
+
+        foreach ($this->iterateUploadedFiles($request->getUploadedFiles()) as $path => $file) {
+            if ($path !== $propertyName) {
+                continue;
+            }
+            if ($file instanceof UploadedFile && $file->getError() === \UPLOAD_ERR_OK) {
+                return $file;
+            }
+        }
+
+        return null;
     }
 
-    private function isMarkedForDeletion(
-        mixed $source,
-        ?PropertyMappingConfigurationInterface $configuration
-    ): bool {
-        if (!is_array($source)) {
+    /**
+     * Recursively yields UploadedFiles from the PSR-7 uploaded-files tree,
+     * keyed by the final path segment (which equals the form field identifier).
+     *
+     * @param array<mixed> $files
+     * @return \Generator<string, UploadedFileInterface>
+     */
+    private function iterateUploadedFiles(array $files): \Generator
+    {
+        foreach ($files as $key => $value) {
+            if ($value instanceof UploadedFileInterface) {
+                yield (string)$key => $value;
+            } elseif (is_array($value)) {
+                yield from $this->iterateUploadedFiles($value);
+            }
+        }
+    }
+
+    private function isMarkedForDeletion(mixed $source, string $propertyName): bool
+    {
+        if (!is_array($source) || !isset($source['submittedFile']['resourcePointer'])) {
             return false;
         }
-
-        // A new upload always wins — the delete checkbox only matters
-        // when keeping the previously uploaded file would be the default.
-        if (isset($source['error']) && $source['error'] === \UPLOAD_ERR_OK) {
-            return false;
-        }
-
-        if (!isset($source['submittedFile']['resourcePointer'])) {
-            return false;
-        }
-
-        $propertyName = (string)($configuration?->getConfigurationValue(self::class, self::OPTION_PROPERTY) ?? '');
 
         return UploadDeleteRequest::getMarkedFileUids($propertyName) !== [];
     }
